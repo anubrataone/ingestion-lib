@@ -1,0 +1,228 @@
+{
+  "_id": "5b5627fe60eb7ae51800341d",
+  "entityTypes": [
+    "MediaOffer",
+    "Offer"
+  ],
+  "isInitialIngested": true,
+  "entityType": "MediaOffer",
+  "collectionName": "Offer",
+  "createDate": "2018-07-31T12:03:12.641-07:00",
+  "createUserId": "SYSTEM",
+  "revision": "86",
+  "lastModifyDate": "2018-07-31T12:35:29.987-07:00",
+  "lastModifyUserId": "SYSTEM",
+  "entityStatus": "CREATED",
+  "content": {
+    "uuid": "prism-cleanup-v2-612a-43df-bdfa-a1fdmo66689700",
+    "offerType": "Movie",
+    "localizedDataMap": {
+      "en_US": {
+        "descriptionLong": "",
+        "titleShort": "RTST S2:E1",
+        "titleLong": "The Shocking Truth S2:E1",
+        "locale": "en_US",
+        "descriptionShort": "\"The Godfather\" has several underworld inspirations."
+      }
+    },
+    "assets": [
+      {
+        "encodingType": "mpg",
+        "contentType": "Video",
+        "drmProtected": false,
+        "master": true,
+        "providerAssetId": "PSMV0121525254286002",
+        "assetType": "Content",
+        "assetData": {
+          "Description": "Patrick Melrose: Character Profile: Patrick Melrose movie asset",
+          "Product": "SVOD",
+          "Version_Major": "1",
+          "Asset_Name": "prflbcumberbatch_3460446_1_0502.mpg",
+          "Content_CheckSum": "24274ab4f57dd7948da2f40fb4a688b9",
+          "Version_Minor": "0",
+          "originalSourceUris": "file:/nfs/mp/aeg/aspera/docroot_spool/labc_orchestrator/loadTest/sanityTest/ProdCMSTest/PSML0121525254286002/prflbcumberbatch_3460446_1_0502_1_2.20180522210432.mpg",
+          "checksum": "24274ab4f57dd7948da2f40fb4a688b9",
+          "Asset_Class": "movie",
+          "Audio_Type": "Stereo",
+          "HDContent": "Y,Y",
+          "Content_FileSize": "825983828",
+          "Provider": "PSM_CP",
+          "Type": "movie",
+          "Provider_ID": "sho.com",
+          "Creation_Date": "2018-05-22"
+        },
+        "isMetaDataUpdated": true,
+        "isEncodedUpdated": true
+      }
+    ],
+    "providerId": "DFW_STANDARD_CP",
+    "ratings": [
+      {
+        "scheme": "MPAA",
+        "rating": "TV-MA"
+      }
+    ],
+    "categories": [
+      "All New Seasons",
+      "Patrick Melrose",
+      "SHO Series",
+      "Patrick Melrose",
+      "NEW: PatrickMelrose"
+    ],
+    "extendedParams": {
+      "publicationStatus": "Draft",
+      "Product": {
+        "AMS": [
+          "SVOD"
+        ]
+      },
+      "Asset_Name": {
+        "AMS": [
+          "prflbcumberbatch_SHO_2018-05-13_Title"
+        ]
+      },
+      "scenarios": "CONTENT_INGEST",
+      "package_asset_Version_Major": {
+        "AMS": [
+          "1"
+        ]
+      },
+      "currentRootProcessId": "5b60b26760eb7ae51815bf55",
+      "Run_Time": {
+        "MOD": [
+          "00:02:00"
+        ]
+      },
+      "jobInstanceId": "5b60b61a60eb7ae51815c6f5",
+      "Version_Major": {
+        "AMS": [
+          "1"
+        ]
+      },
+      "package_asset_Asset_Class": {
+        "AMS": [
+          "package"
+        ]
+      },
+      "package_asset_Product": {
+        "AMS": [
+          "SVOD"
+        ]
+      },
+      "Version_Minor": {
+        "AMS": [
+          "0"
+        ]
+      },
+      "Asset_Class": {
+        "AMS": [
+          "title"
+        ]
+      },
+      "Licensing_Window_End": {
+        "MOD": [
+          "2018-06-09T23:59:59"
+        ]
+      },
+      "Closed_Captioning": {
+        "MOD": [
+          "Y"
+        ]
+      },
+      "Licensing_Window_Start": {
+        "MOD": [
+          "2018-05-13T00:00:00"
+        ]
+      },
+      "package_asset_Asset_ID": {
+        "AMS": [
+          "PSMP0121525254286002"
+        ]
+      },
+      "Display_Run_Time": {
+        "MOD": [
+          "00:02"
+        ]
+      },
+      "package_asset_Metadata_Spec_Version": {
+        "AMS": [
+          "CableLabsVOD1.1"
+        ]
+      },
+      "package_asset_Provider": {
+        "AMS": [
+          "PSM_CP"
+        ]
+      },
+      "package_asset_Provider_Content_Tier": {
+        "AMS": [
+          "PSM_CP3"
+        ]
+      },
+      "Provider": {
+        "AMS": [
+          "PSM_CP"
+        ]
+      },
+      "Type": {
+        "MOD": [
+          "title"
+        ]
+      },
+      "Guide_Category": {
+        "MOD": [
+          "High-Def",
+          "High-Def",
+          "TV Series"
+        ]
+      },
+      "Provider_ID": {
+        "AMS": [
+          "PSM_CP"
+        ]
+      },
+      "Program_Type": {
+        "MOD": [
+          "movie"
+        ]
+      },
+      "Year": {
+        "MOD": [
+          "2018"
+        ]
+      },
+      "package_asset_Provider_ID": {
+        "AMS": [
+          "sho.com"
+        ]
+      },
+      "Genre": {
+        "MOD": [
+          "Added Value"
+        ]
+      }
+      
+    },
+    "providerName": "PSM_CP",
+    "creationDateTime": "2018-05-21T17:00:00.000-07:00",
+    "offerName": "prflbcumberbatch_PSM_CP_2018-05-13_PKG_DTV_MEZZ",
+    "ratingScheme": "MPAA",
+    "collectionInfo": {
+      "feedUrl": "file:/nfs/mp/aeg/aspera/docroot_spool/labc_orchestrator/loadTest/sanityTest/ProdCMSTest/PSML0121525254286002/archive/PSML0121525254286002_TEST_PSM_CP.xml.240718150508.complete.xml.310718190317.complete"
+      
+    },
+    "externalProviderId": "sho.com",
+    "offerStatus": "Active",
+    "processingState": "CREATED",
+    "offerDescription": "Patrick Melrose: Character Profile: Patrick Melrose package asset",
+    "providerOfferId": "PRISM_DEMO6_PSMT0121525254286002",
+    "feedFileInfo": {
+      "feedFileURI": "file:/nfs/mp/aeg/aspera/docroot_spool/labc_orchestrator/loadTest/sanityTest/ProdCMSTest/PSML0121525254286002/PSML0121525254286002_TEST_PSM_CP.xml.240718150508.complete.xml",
+      "feedFileDiscoveryTime": "2018-07-31T12:03:08.391-07:00",
+      "className": "com.quickplay.mp.commons.content.FeedFileInfo",
+      "feedFileModifyTime": "2018-07-31T12:00:31.000-07:00",
+      "isLocalFile": true
+    }
+  }
+  
+}

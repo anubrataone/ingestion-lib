@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<blueprints>
+
+    <map name="mapMarkerType">
+        <entry key="INLINE" value="Inline"/>
+        <entry key="DAI_INSERT" value="DynamicInsert"/>
+        <entry key="DAI_REPLACE" value="DynamicReplace"/>
+    </map>
+
+    <map name="mapTargetType">
+        <entry key="DAI" value="Dynamic"/>
+        <entry key="INLINE" value="Inline"/>
+        <entry key="MIXED" value="Mixed"/>
+    </map>
+
+    <map name="mapTrue">
+        <entry key="true" value="true"/>
+        <entry key="*" value=""/>
+    </map>
+    <map name="publicationStatusMap">
+        <entry key="true" value="Draft"/>
+        <entry key="false" value="Published"/>
+    </map>
+
+    <map name="mediaProcessingStatusMap">
+        <entry key="TRANSCODED" value="Completed"/>
+        <entry key="CONTENT_INGEST" value="Queued"/>
+    </map>
+
+    <map name="mediaProcessingStatusMessageMap">
+        <entry key="TRANSCODED" value="SingleIngestion Publishing Completed"/>
+        <entry key="CONTENT_INGEST" value="MP Queued"/>
+    </map>
+    
+
+    <map name="mediaProcessingDoneMap">
+        <entry key="TRANSCODED" value="true"/>
+        <entry key="CONTENT_INGEST" value="false"/>
+    </map>
+
+    <map name="policyAssociationStatusMap">
+        <entry key="FULL_INGEST" value="Pending"/>
+        <entry key="*" value=""/>
+    </map>
+    <!-- the resolution width and scanning (BATON_Picture Scanning Type) from Content Verification -->
+    <map name="mapContentFormat">
+        <entry key="480" value="SD"/>
+        <entry key="480Progressive" value="SD"/>
+        <entry key="480Interlaced" value="SD"/>
+        <entry key="720" value="HD"/>
+        <entry key="720Progressive" value="HD"/>
+        <entry key="720Interlaced" value="HD"/>
+        <entry key="1080" value="HD"/>
+        <entry key="1080Interlaced" value="HD"/>
+        <entry key="1080Progressive" value="FullHD"/>
+        <entry key="2160" value="4K"/>
+        <entry key="2160Interlaced" value="4K"/>
+        <entry key="2160Progressive" value="4K"/>
+        <entry key="*" value="HD"/>
+    </map>
+
+    <group name="movieEpisodeGroup">
+
+        <var name="Suggested_Price" jsonpath="$.content.extendedParams.Suggested_Price.MOD[0]"/>
+        <var name="Maximum_Viewing_Length" jsonpath="$.content.extendedParams.Maximum_Viewing_Length.MOD[0]"/>
+        <var name="Est_Start_Date" jsonpath="$.content.extendedParams.Est_Window_Start.MOD[0]"  converter="com.att.eg.hvopr.external.ngvp.lambda.publish.utils.CMSPublisherUtil.advancedDateConverter"/>
+        <var name="Est_End_Date" jsonpath="$.content.extendedParams.Est_Window_End.MOD[0]" converter="com.att.eg.hvopr.external.ngvp.lambda.publish.utils.CMSPublisherUtil.advancedDateConverter"/>
+        <var name="Episode_Name" jsonpath="$.content.extendedParams.Episode_Name.MOD[0]"/>
+        <var name="Series_Name" jsonpath="$.content.extendedParams.Series_Name.MOD[0]"/>
+        <var name="Season_Id" jsonpath="$.content.extendedParams.Season_Id.MOD[0]"/>
+        <var name="Dtv_Actors_Display" jsonpath="$.content.extendedParams.Actors_Display.MOD[0]"/>
+        <var name="Dtv_Director" jsonpath="$.content.extendedParams.Director.MOD[0]"/>
+        <var name="Display_As_Last_Chance" jsonpath="$.content.extendedParams.Display_As_Last_Chance.MOD[0]"/>
+        <var name="Dtv_Ratings" jsonpath="$.content.extendedParams.Rating.MOD[0]"/>
+        <var name="Display_As_New" jsonpath="$.content.extendedParams.Display_As_New.MOD[0]"/>
+        <!--<var name="Category" jsonpath="$.content.extendedParams.Category.MOD[0]"/>-->
+        <var name="Guide_Category" jsonpath="$.content.extendedParams.Guide_Category.MOD[0]"/>
+        <!-- add variables for DFWCompany -->
+        <var name="contentProviderName" jsonpath="$.content.providerName" />
+        <var name="contentProviderId" jsonpath="$.content.providerId" />
+        <var name="externalProviderId" jsonpath="$.content.externalProviderId" />
+        <var name="contentProviderCategory"  jsonpath="$.content.extendedParams.Category.MOD" />
+        <var name="jobInstanceId" jsonpath="$.content.extendedParams.jobInstanceId"  converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.defaultIfNull" />
+        <var name="feedUri" jsonpath="$.collectionInfo.feedUrl" />
+        <field name="suggestedPrice" value="${Suggested_Price}" />
+        <field name="maximumViewingLength" value="${Maximum_Viewing_Length}" />
+        <field name="estStartDate" value="${Est_Start_Date}" converter="stringToNumber" />
+        <field name="estEndDate" value="${Est_End_Date}" converter="stringToNumber" />
+        <field name="episodeName" value="${Episode_Name}" />
+        <field name="seriesName" value="${Series_Name}" />
+        <field name="seasonId" value="${Season_Id}" />
+        <field name="dtvActorsDisplay" value="${Dtv_Actors_Display}" />
+        <field name="dtvDirector" value="${Dtv_Director}" />
+        <field name="displayAsLastChance" value="${Display_As_Last_Chance}" />
+        <field name="dtvRatings" value="${Dtv_Ratings}" />
+        <field name="displayAsNew" value="${Display_As_New}" />
+        <!--<field name="category" value="${Category}" />-->
+        <foreach name="categ" jsonpath="$.content.extendedParams.Category.MOD">
+            <field name="category" value="${categ}" />
+        </foreach>
+        <field name="guideCategory" value="${Guide_Category}" />
+
+        <var name="mediaProcessingStatusMapValue" map="mediaProcessingStatusMap" jsonpath="$.content.extendedParams.scenarios"/>
+        <var name="mediaProcessingDoneMapValue" map="mediaProcessingDoneMap" jsonpath="$.content.extendedParams.scenarios"/>
+        <var name="mediaProcessingStatusMessageMapValue" map="mediaProcessingStatusMessageMap" jsonpath="$.content.extendedParams.scenarios"/>
+        <field name="mediaProcessingJobInstanceId" jsonpath="$.workflow_id" />
+        <field name="mediaProcessingStatus" value="${mediaProcessingStatusMapValue}"  />
+        <field name="mediaProcessingStatusMessage" value="${mediaProcessingStatusMessageMapValue}" />
+        <field name="mediaProcessingLastUpdateTime" jsonpath="$.lastModifyDate" converter="com.att.eg.hvopr.external.ngvp.lambda.publish.utils.CMSPublisherUtil.advancedDateConverter"/>
+
+        <var name="titleExternalId" jsonpath="$.content.providerOfferId"/>
+        <var name="uuid" jsonpath="$.content.uuid"/>
+        <var name="providerId" jsonpath="$.content.extendedParams.package_asset_Provider_ID.AMS.[0]"/>
+        <var name="duration" jsonpath="$.content.assets[?(@.contentType == 'Video' &amp;&amp; @.assetType == 'Content')].media.parts[0].mediaProperties.duration"/>
+          
+
+        
+        <field name="externalId" primaryKey="true" jsonpath="$.content.providerOfferId"/>
+        <field name="vodTitleId" value="${uuid}"/>
+        <field name="isTrailer" value="false" converter="toBoolean" />
+        <field name="mediaProcessingDone" value="${mediaProcessingDoneMapValue}" converter="toBoolean" />
+        <!--  Not used as per Mapping Doc <field name="externalTitleId" jsonpath="$.content.extendedParams['titleId']"/> -->
+        <field name="externalSystemId" value="${providerId}" />        
+        
+        <!-- fields needed by mp-content-purge-service -->
+	    <field name="sourceAssetsPurged" value="false" converter="toBoolean" />
+	    <field name="outputAssetsPurged" value="false" converter="toBoolean" />
+
+		
+	    <var name="packageAssetIdVar" jsonpath="$.content.extendedParams.package_asset_Asset_ID.AMS.[0]"/>
+        <!-- AEGDFWMP-1662: publish 'package_asset_Asset_ID' from offer temporarily as customFields -->
+        <field name="packageAssetId" value="${packageAssetIdVar}"/>
+
+        <var name="policyAssociationStatusMapValue" map="policyAssociationStatusMap" jsonpath="$.content.extendedParams.scenarios"/>
+        <field name="policyAssociationStatus" value="${policyAssociationStatusMapValue}" />
+
+        <!--<field name="Key" value="packageAssetId"/>-->
+        <!--<field name="Value" value="${packageAssetIdVar}"/>-->
+
+        <!-- publish 'content.extendedParams.mpPriority', which is the value of Orchestrator_Priority from feed -->
+        <field name="priorityValue" jsonpath="$.content.extendedParams['mpPriority']"/>
+        <field name="priorityLastUpdateTime" converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.systemCurrentTimeMillis" />
+        <field name="priorityOperatorNotes" value="Init by MP" />
+
+        <var name="publicationStatusMapValue" map="publicationStatusMap" jsonpath="$.isInitialIngested"/>
+        <field name="publicationStatus" value="${publicationStatusMapValue}" />
+
+        <field name="contentProvider" type="blueprint">
+            <blueprint name="DFWCompany" description="Ingested by MP" update="true" create="false" preload="true">
+                <field name="name" jsonpath="$.content.providerName" />
+                <var name="providerId" jsonpath="$.content.providerId" />
+                <field name="externalId" primaryKey="true" jsonpath="$.content.externalProviderId" />
+                <field name="description" value="Provider Id: ${providerId}" />
+                <field name="type" primaryKey="true" value="ContentProvider" />
+                <field name="category" preload="true" jsonpath="$.content.extendedParams.Category.MOD" />
+            </blueprint>
+        </field>
+
+        <var name="windowStartDate" jsonpath="$.content.extendedParams['Licensing_Window_Start'].MOD[0]" />
+        <field name="startDate" value="${windowStartDate}" converter="com.att.eg.hvopr.external.ngvp.lambda.publish.utils.CMSPublisherUtil.advancedDateConverter"/>
+
+        <var name="windowEndDate" jsonpath="$.content.extendedParams['Licensing_Window_End'].MOD[0]" />
+        <field name="endDate" value="${windowEndDate}" converter="com.att.eg.hvopr.external.ngvp.lambda.publish.utils.CMSPublisherUtil.advancedDateConverter"/>
+
+        <foreach name="categ" jsonpath="$.content.extendedParams.Guide_Category.MOD">
+            <!--we nedd but not found<field name="guideCategoryText" value="${categ}" />-->
+        </foreach>
+        <foreach name="categ" jsonpath="$.content.extendedParams.Service_Category.MOD">
+            <field name="serviceCategory" value="${categ}" />
+        </foreach>
+
+        <field name="contract" jsonpath="$.content.extendedParams.Contract_Name.MOD[0]"/>
+
+        <foreachkey name="locale" jsonpath="$.content.localizedDataMap">
+            <var name="language" splitter="splitByUnderscore" index="0" />
+            <field name="titleBrief" 		jsonpath="$.content.localizedDataMap['${locale}'].titleShort" />
+            <field name="title" 	jsonpath="$.content.localizedDataMap['${locale}'].titleLong" />
+            <field name="summaryShort" 	jsonpath="$.content.localizedDataMap['${locale}'].descriptionShort" />
+
+        </foreachkey>
+
+        <foreach name="progT" jsonpath="$.content.extendedParams.Program_Type.MOD">
+            <field name="programType" value="${progT}" />
+        </foreach>
+        <field name="frontPorch" jsonpath="$.content.extendedParams.frontPorch.MOD[0]" converter="toBoolean" />
+
+        <var name="frontPorchTrue" jsonpath="$.content.extendedParams.frontPorch.MOD[0]" map="mapTrue" />
+        <foreach name="frontPorchPresent" value="${frontPorchTrue}">
+            <!--We need but not found <field name="entitlements" type="kvp">
+                 <field name="Subscription" type="blueprint">
+                     <blueprint name="DFWSubscriptionPackage" version="1" description="Ingested by MP" update="true" create="false">
+                         <field name="externalId" primaryKey="true" value="FREE" />
+                     </blueprint>
+                 </field>
+
+                 <field name="flightStartDate" value="${windowStartDate},America/Los_Angeles" converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.advancedDateConverter"/>
+                 <field name="flightEndDate" value="${windowEndDate},America/Los_Angeles" converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.advancedDateConverter" />
+             </field>-->
+        </foreach>
+
+        <foreach name="ratings" jsonpath="$.content.ratings">
+            <field name="dtvRatings" jsonpath="$.rating" />
+        </foreach>
+        <field name="dtvAdvisories" jsonpath="$.content.advisories" />
+        <field name="year" jsonpath="$.content.extendedParams.Year.MOD[0]" converter="stringToNumber" />
+        <field name="billingId" jsonpath="$.content.extendedParams.Billing_ID.MOD[0]" />
+        <field name="boxOffice" jsonpath="$.content.extendedParams.Box_Office.MOD[0]" />
+        <field name="displayRuntime" jsonpath="$.content.extendedParams.Display_Run_Time.MOD[0]" />
+        <field name="previewPeriod" jsonpath="$.content.extendedParams.Preview_Period.MOD[0]" converter="stringToNumber" />
+
+        <field name="feed" value="${feedUri}" />
+
+        <foreach name="oneGenre" jsonpath="$.content.genres">
+            <field name="dtvGenres" value="${oneGenre}" />
+        </foreach>
+
+        <!-- castAndCrew -->
+        <foreach name="onePerson" jsonpath="$.content.localizedDataMap[*].actors[*]">
+            <field name="dtvActors" value="${onePerson}" />
+        </foreach>
+
+
+        <field name="cpTMSContentId" jsonpath="$.content.extendedParams['TMS_ID'].MOD[0]" />
+
+        <!-- Assets -->
+        <!-- Main Videos -->
+        <foreach name="assetObj" jsonpath="$.content.assets[?(@.contentType == 'Video' &amp;&amp; @.assetType == 'Content' &amp;&amp; @.master == true)]">
+            <field name="adiLanguage" jsonpath="$.assetData.Languages"/>
+            <field name="adiSubtitleLanguage" jsonpath="$.assetData.Subtitle_Languages"/>
+            <field name="adiDubbedLanguage" jsonpath="$.assetData.Dubbed_Languages"/>
+
+            <!-- set 'contentFormat' attribute for main content -->
+            <foreach name="partObj" jsonpath="$.media.parts">
+                        <foreach name="streamObj"
+                                 jsonpath="$.mediaProperties.streams[?(@.streamType == 'VIDEO' )]">
+                            <!--find 'Resolution',which is separated by 'x'(i.e. '720x480'). Then, extract the width, '480', as the key of contentFormat -->
+                            <var name="Resolution_Height" jsonpath="$.extendedParams['Resolution']" splitter="splitByX" index="1" />
+                            <var name="Scanning" jsonpath="$.extendedParams['Picture Scanning Type']" />
+                            <var name="contentFormatVar" map="mapContentFormat"  value="${Resolution_Height}${Scanning}" />
+                        </foreach>
+            </foreach>
+            <field name="contentFormat" value="${contentFormatVar}"/>
+
+        </foreach>
+
+        <!-- Source Image -->
+        <foreach name="assetObj" jsonpath="$.content.assets[?(@.contentType == 'Image' &amp;&amp; @.assetType == 'Content')]">
+            <field name="sourceImage" type="blueprint">
+                <blueprint name="DFWImageAsset" description="Generated based on Input image by CP" loadExistingURN="true">
+                    <var name="providerAssetId" jsonpath="$.providerAssetId" />
+                    <var name="fileURI" jsonpath="$.media.parts[0].url" />
+                    <field name="externalId" primaryKey="true" value="${providerAssetId}"/>
+                    <field name="externalSystemId" value="${providerAssetId}"/>
+                    <field name="type" jsonpath="$.assetData.Type"/>
+                    <field name="fileName" jsonpath="$.media.parts[0].mediaProperties.filename"/>
+                    <field name="fileURI" value="${fileURI}" />
+                    
+                </blueprint>
+            </field>
+        </foreach>
+
+
+        <!-- Source Videos -->
+        <foreach name="assetObj" jsonpath="$.content.assets[?(@.contentType == 'Video' &amp;&amp; @.assetType == 'Content')]">
+            <var name="providerAssetId" jsonpath="$.providerAssetId" />
+            <var name="contentFileSize" jsonpath="$.assetData.Content_FileSize" />
+            <var name="contentCheckSum" jsonpath="$.assetData.Content_CheckSum" />
+            <var name="type" jsonpath="$.assetData.Type" />
+            <var name="mediaWrapper" jsonpath="$.encodingType" />
+
+            <var name="type" jsonpath="$.assetData.Type" />
+            <foreach name="partObj" jsonpath="$.media.parts">
+                <var name="fileName" jsonpath="$.mediaProperties.filename" />
+                <var name="fileUri" jsonpath="$.mediaProperties.fileUri" />
+                <field name="videoAssetDuration" jsonpath="$.mediaProperties.duration"/>
+                <field name="sourceVideo" type="blueprint">
+                    <blueprint name="DFWVideoAsset" description="Ingested by MP" loadExistingURN="false">
+                        <field name="externalId" primaryKey="true" value="${providerAssetId}" />
+                        <field name="externalSystemId" value="${providerId}"/>
+                        <field name="internalName" value="${providerAssetId}"/>
+                        <field name="type" value="${type}"/>
+                        <field name="fileURI" value="${fileUri}" />
+                        <field name="fileName" value="${fileName}" />
+                        <field name="fileSize" value="${contentFileSize}" converter="removeScientificFromNumber"/>
+                        <field name="fileChecksum" value="${contentCheckSum}" />
+                        <foreach name="streamObj"
+                                 jsonpath="$.mediaProperties.streams[?(@.streamType == 'VIDEO' )]">
+                            <var name="ScanTypeVar" jsonpath="$.extendedParams['Picture Scanning Type']"/>
+                            <var name="FrameRateVar" jsonpath="$.extendedParams['Frame Rate']"/>
+                            <var name="VideoBitrateVar" jsonpath="$.extendedParams['bit_rate_value']"/>
+
+                            <field name="customFields" type="kvp">
+                                <field name="Key" value="VideoAspect"/>
+                                <field name="Value" jsonpath="$.extendedParams['Display Aspect Ratio']"/>
+                            </field>
+                            <field name="customFields" type="kvp">
+                                <field name="Key" value="Resolution"/>
+                                <field name="Value" jsonpath="$.extendedParams['Resolution']"/>
+                            </field>
+                        </foreach>
+                        <field name="mediaProperties" type="kvp">
+                            <field name="Wrapper" value="${mediaWrapper}"/>
+                            <field name="Bitrate" jsonpath="$.mediaProperties.bitrate"/>
+                            <field name="Duration" jsonpath="$.mediaProperties.duration"/>
+                            <var name="durationValue" jsonpath="$.mediaProperties.duration"/>
+
+                            <field name="ScanType" value="${ScanTypeVar}"/>
+                            <field name="FrameRate" value="${FrameRateVar}" converter="stringToNumber"/>
+                            <field name="VideoBitrate" value="${VideoBitrateVar}" converter="stringToNumber"/>
+                        </field>
+
+                    </blueprint>
+                </field>
+            </foreach>
+        </foreach>
+
+        <!-- Published Images -->
+
+
+        <foreach name="assetObj" jsonpath="$.content.assets[?(@.contentType == 'Image' &amp;&amp; @.assetType == 'Content' &amp;&amp; @.master == true)].children[?(@.contentType == 'Image')]">
+            <field name="publishedImage" type="blueprint">
+                <blueprint name="DFWImageAsset" description="Generated based on Published Image to S3" loadExistingURN="true">
+                    <var name="providerAssetId" jsonpath="$.providerAssetId" />
+                    <var name="fileURI" jsonpath="$.media.parts[0].url" />
+                    <field name="externalId" primaryKey="true" value="${providerAssetId}"/>
+                    <field name="externalSystemId" value="${providerAssetId}"/>
+                    <field name="internalName" jsonpath="$.assetData.ProcessingMethod"/>
+                    <field name="type" jsonpath="$.assetData.Type"/>
+                    <field name="fileName" jsonpath="$.media.parts[0].mediaProperties.filename"/>
+                    <field name="fileURI" value="${fileURI}" />
+                    
+                </blueprint>
+            </field>
+        </foreach>
+
+        <!-- Published Videos -->
+        <foreach name="assetObjParent" jsonpath="$.content.assets[?(@.contentType == 'Video' &amp;&amp; @.assetType == 'Content')]">
+            <var name="ciscoContentId" jsonpath="$.assetData.CISCO_ContentId" />
+            <var name="isSSAIEnabled" jsonpath="$.adTarget.midAdTarget.enabled" />
+
+            <foreach name="assetObj" jsonpath="$.children[?(@.contentType == 'Video' &amp;&amp; @.assetType == 'Content')]">
+                <var name="providerAssetId" jsonpath="$.providerAssetId" />
+                <var name="assetType" jsonpath="$.assetType" />
+                <var name="language" jsonpath="$.assetData.languages" />
+                <var name="CDN_Manager_service" jsonpath="$.assetData.extendedParams.CDN_Manager_service" />
+                <var name="CDN_Manager_subservice"  jsonpath="$.assetData.extendedParams.CDN_Manager_subservice" />
+                <var name="CRS_URL_substitution_rule"  jsonpath="$.assetData.extendedParams.CRS_URL_substitution_rule" />
+
+                <var name="packaging" map="mapPackaging" jsonpath="$.deliveryInfo.deliveryMethod" />
+                <foreach name="assetObj" jsonpath="$[?(@.deliveryInfo.deliveryMethod)].media.parts[*]">
+                    <var name="fileSize" jsonpath="$.mediaProperties.fileSize" />
+                    <var name="bitrate" jsonpath="$.mediaProperties.bitrate" />
+                    <var name="fileName" jsonpath="$.mediaProperties.filename" />
+                    <var name="fileChecksum" jsonpath="$.checksum" />
+                    <var name="drmName" jsonpath="$.drmInfo.name" />
+                    <var name="drmType" jsonpath="$.drmInfo.drmType" />
+                    <var name="drmId" jsonpath="$.drmInfo.drmId" />
+                    <var name="drmVersion" jsonpath="$.drmInfo.drmVersion" />
+                    
+                    <field name="publishedVideo" type="blueprint">
+                        
+                        <blueprint name="DFWVideoAsset" description="Ingested by MP" loadExistingURN="true">
+                            <field name="externalId" primaryKey="true" value="${providerAssetId}"/>
+                            <field name="externalSystemId" value="${providerId}"/>
+                            <field name="internalName" value="${providerAssetId}"/>
+                            <field name="type" value="${assetType}"/>
+                            <field name="consumptionURI" jsonpath="$.consumptionUrl"/>
+                            <field name="language" value="${language}" converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.toISO3LanguageCode" />
+                            <field name="packagerContentId" value="${ciscoContentId}" />
+                            <field name="packaging" value="${packaging}"/>
+                            <field name="drm" type="blueprint">
+                                <blueprint name="DFWDRMProfile" description="Ingested by MP" update="true" create="false">
+                                    <field name="drmVersion" value="${drmVersion}" />
+                                    <field name="drmId" value="${drmId}" />
+                                    <field name="name" primaryKey="true" value="${drmName}" />
+                                    <field name="drmType" value="${drmType}" />
+                                </blueprint>
+                            </field>
+
+                            <field name="mediaProperties" type="kvp">
+                                <field name="Duration" value="${durationValue}" converter="stringToNumber"/>
+                            </field>
+
+                            <field name="fileName" value="${fileName}"/>
+                            <field name="fileSize" value="${fileSize}"/>
+                            <field name="fileChecksum" value="${fileChecksum}"/>
+
+                            <field name="cdnService" value="${CDN_Manager_service}" />
+                            <field name="cdnSubService" value="${CDN_Manager_subservice}" />
+                            <field name="urlSubstitutionRule" value="${CRS_URL_substitution_rule}" />
+                            <field name="isSSAIconditioned" value="${isSSAIEnabled}" converter="toBoolean" />
+                        </blueprint>
+                    </field>
+                </foreach>
+            </foreach>
+        </foreach>
+        
+       <!-- Initial trailers/previews -->
+       <foreach name="partObj" jsonpath="$.content.assets[?(@.contentType == 'Video' &amp;&amp; @.assetType == 'Preview')]">
+            <field name="trailers" type="blueprint">
+                <blueprint name="DFWGenericVODTitle" description="Ingested by MP" loadExistingURN="true">
+                    <field name="externalId" primaryKey="true" jsonpath="$.providerAssetId" />
+                    <field name="mediaProcessingJobInstanceId" value="${jobInstanceId}" />           
+                    <field name="mediaProcessingStatus" value="${mediaProcessingStatusMapValue}"  />
+                    <field name="mediaProcessingStatusMessage" value="${mediaProcessingStatusMessageMapValue}" />
+                    <field name="mediaProcessingLastUpdateTime"  converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.systemCurrentTimeMillis" />
+
+					<field name="sourceAssetsPurged" value="false" converter="toBoolean" />
+					<field name="outputAssetsPurged" value="false" converter="toBoolean" />
+					
+		
+                    <!--  add CP and feed URI, these are needed for source assets purging -->
+                    <field name="feed" value="${feedUri}" />
+			        <field name="contentProvider" type="blueprint">
+			            <blueprint name="DFWCompany" description="Ingested by MP" update="true" create="false" preload="true">
+			                <field name="name" value="${contentProviderName}" />
+			                <field name="externalId" primaryKey="true" value="${externalProviderId}"/>
+			                <field name="description" value="Provider Id: ${contentProviderId}" />
+			                <field name="type" primaryKey="true" value="ContentProvider" />
+			                <field name="category" preload="true" value="${contentProviderCategory}" />
+			            </blueprint>
+			        </field>                           
+                </blueprint>
+            </field>
+        </foreach>
+
+    </group>
+
+
+    <!--normal case publishing: the offer.content.extendedParams['CMS_PUBLISH_SWITCH'] value should NOT be set -->
+    <blueprint name="DFWGenericVODTitle" description="Ingested by MP" loadExistingURN="false"  jsonpathmatch="$.content.extendedParams['CMS_PUBLISH_SWITCH']" jsonmatchvalue="" >
+        <include group="movieEpisodeGroup" />
+    </blueprint>
+
+
+    <!--movieEpisodeJobAborted: to update mediaProcessing attributes when MP job manually aborted -->
+    <group name="movieEpisodeJobAborted">
+        <var name="jobInstanceId" jsonpath="$.content.extendedParams.jobInstanceId"  converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.defaultIfNull" />
+        <field name="externalId" primaryKey="true" jsonpath="$.content.providerOfferId"/>
+        <field name="mediaProcessingJobInstanceId" value="${jobInstanceId}" />
+        <field name="mediaProcessingStatus" value="Failed" />
+        <field name="mediaProcessingStatusMessage" value="MP Job Aborted At Preprocessing" />
+        <field name="mediaProcessingLastUpdateTime"  converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.systemCurrentTimeMillis"  />
+
+        <!-- Trailers - Preview Videos -->
+        <foreach name="partObj" jsonpath="$.content.assets[?(@.contentType == 'Video' &amp;&amp; @.assetType == 'Preview')]">
+            <field name="trailers" type="blueprint">
+                <blueprint name="DFWGenericVODTitle" description="Ingested by MP" loadExistingURN="true">
+                    <field name="externalId" primaryKey="true" jsonpath="$.providerAssetId" />
+                    <field name="mediaProcessingJobInstanceId" value="${jobInstanceId}" />
+                    <field name="mediaProcessingStatus" value="Failed" />
+                    <field name="mediaProcessingStatusMessage" value="MP Job Aborted At Preprocessing" />
+                    <field name="mediaProcessingLastUpdateTime"  converter="com.quickplay.mp.module.score.cmspublisher.CMSPublisherUtil.systemCurrentTimeMillis" />
+                </blueprint>
+            </field>
+        </foreach>
+
+    </group>
+
+    <!--job aborted case publishing: the offer.content.extendedParams['CMS_PUBLISH_SWITCH'] value is temporarily set to 'JOB_ABORTED' by cleanup workflow for supporting cleanup CMSPublishing-->
+    <blueprint name="DFWGenericVODTitle" description="Ingested by MP" loadExistingURN="false"  jsonpathmatch="$.content.extendedParams['CMS_PUBLISH_SWITCH']" jsonmatchvalue="JOB_ABORTED" >
+        <include group="movieEpisodeJobAborted" />
+    </blueprint>
+
+</blueprints>
